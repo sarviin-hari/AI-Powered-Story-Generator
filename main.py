@@ -54,32 +54,78 @@ def cover_response(design_prompt, client):
   print(image_url)
   return image_url
 
-st.markdown("# AI Prompt Image Generator")
+import streamlit as st
+
+# Inject custom CSS for the gradient text
+st.markdown(
+    """
+    <style>
+    .gradient-text {
+        background: -webkit-linear-gradient(#ee7752, #e73c7e, #23a6d5, #23d5ab);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        display: inline;
+    }
+    .normal-text {
+        display: inline;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Display the text with the gradient and the star beside it
+st.markdown('<h1><span class="gradient-text">AI Prompt Image Generator</span> <span class="normal-text">✨</span></h1>', unsafe_allow_html=True)
+
 
 st.markdown("""---""")
-with st.form('jesus_with_coffee'):
+with st.form('test'):
     st.write("This is for the user to key in information")
     msg = st.text_input(label = "Enter your story here: ")
 
     submitted = st.form_submit_button(label = "Submit")
     if submitted:
         if len(msg) == 0:
-            st.write("No message input!")
+            st.info('No message Input given', icon="🚨")
+
         else:
             story = story_response(msg, client)
             st.markdown("""---""")
             st.write(story)
             st.markdown("""---""")
             design_prompt = design_response(story, client)
-            st.write(design_prompt)
-            st.markdown("""---""")
             image_url = cover_response(design_prompt, client)
-            st.image(
-                requests.get(image_url).content,
-                width=400
+            # Inject custom CSS to center the image
+            st.markdown(
+                """
+                <style>
+                .centered-image {
+                    display: flex;
+                    justify-content: center;
+                }
+                </style>
+                """,
+                unsafe_allow_html=True
             )
 
-# design_prompt = design_response(story, client)
-# st.write(design_prompt)
-# image_url = cover_response(design_prompt, client)
-# Disp.Image(requests.get(image_url).content) # Method 2
+            # Display the image centered
+            st.markdown(
+                f'<div class="centered-image"><img src="{image_url}" width="400"></div>',
+                unsafe_allow_html=True
+            )
+            st.write(design_prompt)
+            st.markdown("""---""")
+
+            st.success('You have successfully generated a story and an image prompt for the cover of the story 👏👏👏', icon="✅")
+
+            st.snow()
+
+st.info('Thank you for using this AI Prompter', icon="ℹ️")
+
+
+            
+
+
+
+
+
